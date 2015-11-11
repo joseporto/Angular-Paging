@@ -1,20 +1,20 @@
 /**
  * @ngDoc module
- * @name ng.module:myApp
+ * @name ng.module:joseporto
  *
  * @description
  * This module is here for sample purposes
  */
-angular.module('myApp', ["bw.paging"]);
+angular.module('joseporto', ["joseporto.paging"]);
 
 /**
  * @ngDoc controller
- * @name ng.module:myApp
+ * @name ng.module:joseporto
  *
  * @description
  * This controller is here for sample purposes
  */
-angular.module('myApp').controller('sampleCtrl', ['$scope', '$log', function($scope, $log) {
+angular.module('joseporto').controller('sampleCtrl', ['$scope', '$log', function($scope, $log) {
 
     // A function to do some act on paging click
     // In reality this could be calling a service which

@@ -1,0 +1,33 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "globals": {
+    "console": false,
+    "angular": false,
+    "require": false,
+    "process": false,
+    "module": false,
+    "localStorage": false,
+		"window": false,
+		"document": false
+  },
+  "immed": true,
+  "noarg": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": "vars",
+  "strict": false,
+  "eqnull": true,
+  "expr": true,
+  "globalstrict": true,
+  "maxparams": 10,
+  "maxdepth": 7,
+  "maxstatements": 25,
+  "maxcomplexity": 10, // recomended 10, should not exceed 15
+  "boss": true,
+  "onevar": true,
+  "smarttabs": true,
+  "trailing": true,
+  "multistr": true,
+  "laxbreak": true
+}

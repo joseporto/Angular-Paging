@@ -10,7 +10,7 @@
  * @element EA
  *
  */
-angular.module('bw.paging', []).directive('paging', function () {
+angular.module('joseporto.paging', []).directive('paging', [ '$sce', function ($sce) {
 
     /**
      * The angular return value required for the directive
@@ -187,13 +187,13 @@ angular.module('bw.paging', []).directive('paging', function () {
             var prevPage = scope.page - 1 <= 0 ? 1 : scope.page - 1;
 
             alpha = {
-                value: "<<",
+                value: '<i class="fa fa-angle-double-left"></i>',
                 title: 'First Page',
                 page: 1
             };
 
             beta = {
-                value: "<",
+                value: '<i class="fa fa-angle-left"></i>',
                 title: 'Previous Page',
                 page: prevPage
             };
@@ -204,13 +204,13 @@ angular.module('bw.paging', []).directive('paging', function () {
             var nextPage = scope.page + 1 >= pageCount ? pageCount : scope.page + 1;
 
             alpha = {
-                value: ">",
+                value: '<i class="fa fa-angle-double-right"></i>',
                 title: 'Next Page',
                 page: nextPage
             };
 
             beta = {
-                value: ">>",
+                value: '<i class="fa fa-angle-double-right"></i>',
                 title: 'Last Page',
                 page: pageCount
             };
@@ -219,7 +219,7 @@ angular.module('bw.paging', []).directive('paging', function () {
         // Create the Add Item Function
         var buildItem = function (item, disabled) {
             return {
-                value: item.value,
+                value: $sce.trustAsHtml(item.value),
                 title: item.title,
                 liClass: disabled ? scope.disabledClass : '',
                 action: function () {
@@ -253,7 +253,7 @@ angular.module('bw.paging', []).directive('paging', function () {
         // Create the Add Item Function
         var buildItem = function (i) {
             return {
-                value: i,
+                value: $sce.trustAsHtml(i.toString()),
                 title: 'Page ' + i,
                 liClass: scope.page == i ? scope.activeClass : '',
                 action: function () {
@@ -279,7 +279,7 @@ angular.module('bw.paging', []).directive('paging', function () {
      */
     function addDots(scope) {
         scope.List.push({
-            value: scope.dots
+            value: $sce.trustAsHtml(scope.dots)
         });
     }
 
@@ -409,4 +409,4 @@ angular.module('bw.paging', []).directive('paging', function () {
     }
 
 
-});
+} ] );

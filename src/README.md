@@ -12,7 +12,7 @@ The angular paging directive javascript code.
 
 This is the latest code under development - see the `dist` folder for tagged and minified versions.
 
-The paging directive is contained in a `bw.paging` module which you can consume in your project.
+The paging directive is contained in a `joseporto.paging` module which you can consume in your project.
 
 <br/>
 **The following constraints are built into the directive by design:**

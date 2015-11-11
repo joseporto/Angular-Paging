@@ -1,3 +1,39 @@
+(function(window, angular, undefined) {
+  'use strict';
+
+/**
+ * @ngDoc module
+ * @name ng.module:joseporto
+ *
+ * @description
+ * This module is here for sample purposes
+ */
+angular.module('joseporto', ["joseporto.paging"]);
+
+/**
+ * @ngDoc controller
+ * @name ng.module:joseporto
+ *
+ * @description
+ * This controller is here for sample purposes
+ */
+angular.module('joseporto').controller('sampleCtrl', ['$scope', '$log', function($scope, $log) {
+
+    // A function to do some act on paging click
+    // In reality this could be calling a service which
+    // returns the items of interest from the server
+    // based on the page parameter
+    $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
+        $log.info({
+            text: text,
+            page: page,
+            pageSize: pageSize,
+            total: total
+        });
+    };
+
+}]);
+
 /**
  * @ngDoc directive
  * @name ng.directive:paging
@@ -10,20 +46,20 @@
  * @element EA
  *
  */
-angular.module('bw.paging', []).directive('paging', function () {
+angular.module('joseporto.paging', []).directive('paging', [ '$sce', function ($sce) {
 
     /**
-    * The angular return value required for the directive
-    * Feel free to tweak / fork values for your application
-    */ 
+     * The angular return value required for the directive
+     * Feel free to tweak / fork values for your application
+     */
     return {
 
         // Restrict to elements and attributes
         restrict: 'EA',
-        
+
         // Assign the angular link function
         link: fieldLink,
-        
+
         // Assign the angular scope attribute formatting
         scope: {
             page: '=',
@@ -42,41 +78,41 @@ angular.module('bw.paging', []).directive('paging', function () {
 
         // Assign the angular directive template HTML
         template: 
-            '<ul ng-hide="Hide" ng-class="ulClass"> ' +
+            '<ul data-ng-hide="Hide" data-ng-class="ulClass"> ' +
                 '<li ' +
                     'title="{{Item.title}}" ' +
-                    'ng-class="Item.liClass" ' +
-                    'ng-click="Item.action()" ' +
-                    'ng-repeat="Item in List"> ' +
-                        '<span ng-bind="Item.value"></span> ' +
+                    'data-ng-class="Item.liClass" ' +
+                    'data-ng-click="Item.action()" ' +
+                    'data-ng-repeat="Item in List"> ' +
+                        '<span data-ng-bind="Item.value"></span> ' +
                 '</li>' +
             '</ul>'
     };
-    
-    
+
+
     /**
-    * Link the directive to enable our scope watch values
-    * 
-    * @param {object} scope - Angular link scope
-    * @param {object} el - Angular link element
-    * @param {object} attrs - Angular link attribute 
-    */
-    function fieldLink (scope, el, attrs) {
-            
-        // Hook in our watched items 
+     * Link the directive to enable our scope watch values
+     *
+     * @param {object} scope - Angular link scope
+     * @param {object} el - Angular link element
+     * @param {object} attrs - Angular link attribute
+     */
+    function fieldLink(scope, el, attrs) {
+
+        // Hook in our watched items
         scope.$watchCollection('[page,pageSize,total]', function () {
             build(scope, attrs);
         });
     }
-    
-    
+
+
     /**
-    * Assign default scope values from settings
-    * Feel free to tweak / fork these for your application
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {Object} attrs - The local directive attribute object
-    */ 
+     * Assign default scope values from settings
+     * Feel free to tweak / fork these for your application
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {Object} attrs - The local directive attribute object
+     */
     function setScopeValues(scope, attrs) {
 
         scope.List = [];
@@ -96,12 +132,12 @@ angular.module('bw.paging', []).directive('paging', function () {
 
 
     /**
-    * Validate and clean up any scope values
-    * This happens after we have set the scope values
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {int} pageCount - The last page number or total page count 
-    */
+     * Validate and clean up any scope values
+     * This happens after we have set the scope values
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {int} pageCount - The last page number or total page count
+     */
     function validateScopeValues(scope, pageCount) {
 
         // Block where the page is larger than the pageCount
@@ -128,17 +164,19 @@ angular.module('bw.paging', []).directive('paging', function () {
 
 
     /**
-    * Assign the method action to take when a page is clicked
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {int} page - The current page of interest
-    */
+     * Assign the method action to take when a page is clicked
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {int} page - The current page of interest
+     */
     function internalAction(scope, page) {
 
         // Block clicks we try to load the active page
-        if (scope.page == page) { return; }
+        if (scope.page == page) {
+            return;
+        }
 
-        // Update the page in scope 
+        // Update the page in scope
         scope.page = page;
 
         // Pass our parameters to the paging action
@@ -156,20 +194,22 @@ angular.module('bw.paging', []).directive('paging', function () {
 
 
     /**
-    * Add the first, previous, next, and last buttons if desired   
-    * The logic is defined by the mode of interest
-    * This method will simply return if the scope.showPrevNext is false
-    * This method will simply return if there are no pages to display
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {int} pageCount - The last page number or total page count
-    * @param {string} mode - The mode of interest either prev or last 
-    */
-    function addPrevNext(scope, pageCount, mode){
-        
+     * Add the first, previous, next, and last buttons if desired
+     * The logic is defined by the mode of interest
+     * This method will simply return if the scope.showPrevNext is false
+     * This method will simply return if there are no pages to display
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {int} pageCount - The last page number or total page count
+     * @param {string} mode - The mode of interest either prev or last
+     */
+    function addPrevNext(scope, pageCount, mode) {
+
         // Ignore if we are not showing
         // or there are no pages to display
-        if (!scope.showPrevNext || pageCount < 1) { return; }
+        if (!scope.showPrevNext || pageCount < 1) {
+            return;
+        }
 
         // Local variables to help determine logic
         var disabled, alpha, beta;
@@ -177,116 +217,142 @@ angular.module('bw.paging', []).directive('paging', function () {
 
         // Determine logic based on the mode of interest
         // Calculate the previous / next page and if the click actions are allowed
-        if(mode === 'prev') {
-            
+        if (mode === 'prev') {
+
             disabled = scope.page - 1 <= 0;
             var prevPage = scope.page - 1 <= 0 ? 1 : scope.page - 1;
-            
-            alpha = { value : "<<", title: 'First Page', page: 1 };
-            beta = { value: "<", title: 'Previous Page', page: prevPage };
-             
+
+            alpha = {
+                value: '<i class="fa fa-angle-double-left"></i>',
+                title: 'First Page',
+                page: 1
+            };
+
+            beta = {
+                value: '<i class="fa fa-angle-left"></i>',
+                title: 'Previous Page',
+                page: prevPage
+            };
+
         } else {
-            
+
             disabled = scope.page + 1 > pageCount;
             var nextPage = scope.page + 1 >= pageCount ? pageCount : scope.page + 1;
-            
-            alpha = { value : ">", title: 'Next Page', page: nextPage };
-            beta = { value: ">>", title: 'Last Page', page: pageCount };
+
+            alpha = {
+                value: '<i class="fa fa-angle-double-right"></i>',
+                title: 'Next Page',
+                page: nextPage
+            };
+
+            beta = {
+                value: '<i class="fa fa-angle-double-right"></i>',
+                title: 'Last Page',
+                page: pageCount
+            };
         }
 
         // Create the Add Item Function
-        var addItem = function(item, disabled){           
-            scope.List.push({
-                value: item.value,
+        var buildItem = function (item, disabled) {
+            return {
+                value: $sce.trustAsHtml(item.value),
                 title: item.title,
                 liClass: disabled ? scope.disabledClass : '',
-                action: function(){
-                    if(!disabled) {
+                action: function () {
+                    if (!disabled) {
                         internalAction(scope, item.page);
                     }
                 }
-            });
+            };
         };
 
+        // Build our items
+        var alphaItem = buildItem(alpha, disabled);
+        var betaItem = buildItem(beta, disabled);
+
         // Add our items
-        addItem(alpha, disabled);
-        addItem(beta, disabled);
+        scope.List.push(alphaItem);
+        scope.List.push(betaItem);
     }
 
 
     /**
-    * Adds a range of numbers to our list 
-    * The range is dependent on the start and finish parameters
-    *
-    * @param {int} start - The start of the range to add to the paging list
-    * @param {int} finish - The end of the range to add to the paging list 
-    * @param {Object} scope - The local directive scope object
-    */
+     * Adds a range of numbers to our list
+     * The range is dependent on the start and finish parameters
+     *
+     * @param {int} start - The start of the range to add to the paging list
+     * @param {int} finish - The end of the range to add to the paging list
+     * @param {Object} scope - The local directive scope object
+     */
     function addRange(start, finish, scope) {
 
-        var i = 0;
-        for (i = start; i <= finish; i++) {
-
-            var item = {
-                value: i,
+        // Create the Add Item Function
+        var buildItem = function (i) {
+            return {
+                value: $sce.trustAsHtml(i.toString()),
                 title: 'Page ' + i,
                 liClass: scope.page == i ? scope.activeClass : '',
                 action: function () {
                     internalAction(scope, this.value);
                 }
             };
+        };
 
+        // Add our items where i is the page number
+        var i = 0;
+        for (i = start; i <= finish; i++) {
+            var item = buildItem(i);
             scope.List.push(item);
         }
     }
 
 
     /**
-    * Add Dots ie: 1 2 [...] 10 11 12 [...] 56 57
-    * This is my favorite function not going to lie
-    *
-    * @param {Object} scope - The local directive scope object
-    */
+     * Add Dots ie: 1 2 [...] 10 11 12 [...] 56 57
+     * This is my favorite function not going to lie
+     *
+     * @param {Object} scope - The local directive scope object
+     */
     function addDots(scope) {
         scope.List.push({
-            value: scope.dots
+            value: $sce.trustAsHtml(scope.dots)
         });
     }
 
 
     /**
-    * Add the first or beginning items in our paging list  
-    * We leverage the 'next' parameter to determine if the dots are required
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {int} next - the next page number in the paging sequence
-    */
+     * Add the first or beginning items in our paging list
+     * We leverage the 'next' parameter to determine if the dots are required
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {int} next - the next page number in the paging sequence
+     */
     function addFirst(scope, next) {
-        
+
         addRange(1, 2, scope);
 
         // We ignore dots if the next value is 3
-        // ie: 1 2 [...] 3 4 5 becomes just 1 2 3 4 5 
-        if(next != 3){
+        // ie: 1 2 [...] 3 4 5 becomes just 1 2 3 4 5
+        if (next != 3) {
             addDots(scope);
         }
     }
 
 
     /**
-    * Add the last or end items in our paging list  
-    * We leverage the 'prev' parameter to determine if the dots are required
-    *
-    * @param {int} pageCount - The last page number or total page count 
-    * @param {Object} scope - The local directive scope object
-    * @param {int} prev - the previous page number in the paging sequence
-    */
+     * Add the last or end items in our paging list
+     * We leverage the 'prev' parameter to determine if the dots are required
+     *
+     * @param {int} pageCount - The last page number or total page count
+     * @param {Object} scope - The local directive scope object
+     * @param {int} prev - the previous page number in the paging sequence
+     */
     // Add Last Pages
     function addLast(pageCount, scope, prev) {
 
         // We ignore dots if the previous value is one less that our start range
-        // ie: 1 2 3 4 [...] 5 6  becomes just 1 2 3 4 5 6 
-        if(prev != pageCount - 2){
+        // ie: 1 2 3 4 [...] 5 6  becomes just 1 2 3 4 5 6
+        if (prev != pageCount - 2) {
             addDots(scope);
         }
 
@@ -296,16 +362,18 @@ angular.module('bw.paging', []).directive('paging', function () {
 
 
     /**
-    * The main build function used to determine the paging logic
-    * Feel free to tweak / fork values for your application
-    *
-    * @param {Object} scope - The local directive scope object
-    * @param {Object} attrs - The local directive attribute object
-    */ 
+     * The main build function used to determine the paging logic
+     * Feel free to tweak / fork values for your application
+     *
+     * @param {Object} scope - The local directive scope object
+     * @param {Object} attrs - The local directive attribute object
+     */
     function build(scope, attrs) {
 
         // Block divide by 0 and empty page size
-        if (!scope.pageSize || scope.pageSize <= 0) { scope.pageSize = 1; }
+        if (!scope.pageSize || scope.pageSize <= 0) {
+            scope.pageSize = 1;
+        }
 
         // Determine the last page or total page count
         var pageCount = Math.ceil(scope.total / scope.pageSize);
@@ -316,10 +384,10 @@ angular.module('bw.paging', []).directive('paging', function () {
         // Validate the scope values to protect against strange states
         validateScopeValues(scope, pageCount);
 
-        // Create the beginning and end page values 
+        // Create the beginning and end page values
         var start, finish;
 
-        // Calculate the full adjacency value 
+        // Calculate the full adjacency value
         var fullAdjacentSize = (scope.adjacent * 2) + 2;
 
 
@@ -335,7 +403,7 @@ angular.module('bw.paging', []).directive('paging', function () {
 
         } else {
 
-            // Determine if we are showing the beginning of the paging list 
+            // Determine if we are showing the beginning of the paging list
             // We know it is the beginning if the page - adjacent is <= 2
             if (scope.page - scope.adjacent <= 2) {
 
@@ -344,11 +412,11 @@ angular.module('bw.paging', []).directive('paging', function () {
 
                 addRange(start, finish, scope);
                 addLast(pageCount, scope, finish);
-            } 
+            }
 
             // Determine if we are showing the middle of the paging list
             // We know we are either in the middle or at the end since the beginning is ruled out above
-            // So we simply check if we are not at the end 
+            // So we simply check if we are not at the end
             // Again 2 is hard coded as we always display two pages after the dots
             else if (scope.page < pageCount - (scope.adjacent + 2)) {
 
@@ -358,7 +426,7 @@ angular.module('bw.paging', []).directive('paging', function () {
                 addFirst(scope, start);
                 addRange(start, finish, scope);
                 addLast(pageCount, scope, finish);
-            } 
+            }
 
             // If nothing else we conclude we are at the end of the paging list
             // We know this since we have already ruled out the beginning and middle above
@@ -377,4 +445,6 @@ angular.module('bw.paging', []).directive('paging', function () {
     }
 
 
-});
+} ] );
+
+})(window, window.angular);
