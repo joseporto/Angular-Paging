@@ -1,5 +1,5 @@
 {
-  "name": "angular-paging",
+  "name": "jp-angular-paging",
   "distName": "paging",
   "version": "2.0.0",
   "description": "A directive to aid in paging large datasets while requiring the bare minimum of actual paging information",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/brantwills/Angular-Paging.git"
+    "url": "https://github.com/joseporto/Angular-Paging.git"
   },
   "keywords": [
     "angular",
@@ -27,9 +27,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brantwills/Angular-Paging/issues"
+    "url": "https://github.com/joseporto/Angular-Paging/issues"
   },
-  "homepage": "https://github.com/brantwills/Angular-Paging",
+  "homepage": "https://github.com/joseporto/Angular-Paging",
   "devDependencies": {
     "angular": "~1.4.5",
     "angular-mocks": "~1.4.5",
